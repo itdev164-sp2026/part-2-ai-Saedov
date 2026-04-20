@@ -112,3 +112,35 @@ The agent fixed the error at the first try and everything worked perfectly after
 
 The agent didn't make any mistake when following instructions, it completely preserved the work made on Activity 1. The only mistake was an error that that it described like "it forgot to use it", but it recognized it right away and fixed it with no problems.
 Giving the agent context is essential when trying to automatized process and it helps the agent to not make mistakes, or at least to create something as close as possible to what you want.
+
+## Activity 3: Server-Side Data with Supabase
+
+### Prompt 1
+
+**What I asked:**
+Using the Supabase client at src/lib/supabase.ts, create a new Server Component
+at src/app/projects/page.tsx that:
+
+1. Fetches all records from the "projects" table in Supabase
+2. Displays them in a professional layout using shadcn/ui Card components
+   (run `npx shadcn@latest add card` if needed)
+3. Each card should show the project title, description, and a status badge
+4. The status badge should be color-coded:
+   - "active" = green
+   - "completed" = blue
+   - "archived" = gray
+
+Use @workspace context to match the styling of our existing Dashboard.
+This must be a React Server Component (async function, no "use client").
+Do NOT use useEffect or useState for data fetching.
+
+**What happened:**
+The agent created everything as it was supposed to, it used async/await and everything is working really good.
+
+### Prompt 2
+
+I didn't have to do a second prompt, the agent automatically fixed the bread crumbs on the first prompt and, since it didn't make any mistakes, I didn't have to ask for anything else.
+
+### Reflection
+
+It is definitely faster and easier to fetch data ratter than work with useEffect. Is faster and more efficient. I have been working with it on personal projects and it always surprise me how easy is to set everything up and how good it works.
