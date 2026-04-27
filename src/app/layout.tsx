@@ -7,6 +7,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -54,6 +55,7 @@ export default function RootLayout({
             </SidebarInset>
           </SidebarProvider>
           </TooltipProvider>
+        <Toaster />
         </ThemeProvider>
       </body>
     </html>

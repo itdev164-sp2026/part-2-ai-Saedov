@@ -144,3 +144,59 @@ I didn't have to do a second prompt, the agent automatically fixed the bread cru
 ### Reflection
 
 It is definitely faster and easier to fetch data ratter than work with useEffect. Is faster and more efficient. I have been working with it on personal projects and it always surprise me how easy is to set everything up and how good it works.
+
+## Activity 4: AI-Driven Forms & Validation
+
+### Prompt 1
+
+**What I asked:**
+
+Create a Zod validation schema in a new file src/lib/schemas.ts for a "Project"
+with the following fields:
+
+- title: string, minimum 3 characters, with a custom error message
+  "Title must be at least 3 characters"
+- description: string, minimum 10 characters, with a custom error message
+  "Description must be at least 10 characters"
+- status: enum with values "Planning", "Active", "Completed"
+
+Export the schema and also export the inferred TypeScript type using z.infer.
+
+**What happened:**
+
+The agent created the schema correctly, it looks exactly like the example on the activity instructions.
+
+### Prompt 2
+
+**What I asked:**
+
+Using the Zod schema from src/lib/schemas.ts, do the following:
+
+1. Create a professional form component at src/components/project-form.tsx
+   using shadcn/ui Form, Input, Textarea, and a Select or radio group for status.
+   The form should:
+   - Use react-hook-form with the Zod resolver for validation
+   - Show inline error messages under each field when validation fails
+   - Have a "Create Project" submit button
+   - Show a toast notification on successful submission
+
+2. Create a Server Action at src/app/actions.ts that:
+   - Has "use server" at the top of the file
+   - Accepts the form data
+   - Validates it again with the Zod schema (server-side validation)
+   - Inserts the validated data into the Supabase "projects" table
+   - Returns a success or error response
+
+3. Create a new page at src/app/projects/new/page.tsx that renders
+   the project form within the dashboard layout.
+
+Use @workspace to match the existing project styling.
+
+**What happened:**
+
+The agent did everything right, it took longer than other times but it connected the form submission to the server action correctly and it also included sever-side Zod validation. Everything works perfect.
+The only thing I have to add was the RLS policy to create a new row. The RLS policy we had before it only allowed users to read but not to insert new rows. Nothing to do with the agent (at least that is what I think).
+
+### Reflection
+
+I believe it is definitely more efficient, easy and safer to create an schema. It makes way more sense than having a lot of if statements with more room for errors. Since it verifies that the user's data matches the rules defined on the Zod Schema, everything that doesn't math it would not get into the database.
