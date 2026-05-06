@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FolderOpen, Settings } from "lucide-react";
+import { Home, FolderOpen, Settings, LogOut } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,6 +19,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { BookOpen } from "lucide-react";
+import { signOut } from "@/app/(auth)/actions";
 
 const navItems = [
   { label: "Overview", href: "/", icon: Home },
@@ -24,7 +27,7 @@ const navItems = [
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ user }: { user: User | null }) {
   const pathname = usePathname();
 
   return (
@@ -66,6 +69,26 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {user && (
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <div className="px-2 py-1 text-xs text-muted-foreground truncate">
+                {user.email}
+              </div>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <form action={signOut} className="w-full">
+                <SidebarMenuButton type="submit" tooltip="Sign out">
+                  <LogOut />
+                  <span>Sign out</span>
+                </SidebarMenuButton>
+              </form>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      )}
 
       <SidebarRail />
     </Sidebar>

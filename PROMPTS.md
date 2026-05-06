@@ -200,3 +200,61 @@ The only thing I have to add was the RLS policy to create a new row. The RLS pol
 ### Reflection
 
 I believe it is definitely more efficient, easy and safer to create an schema. It makes way more sense than having a lot of if statements with more room for errors. Since it verifies that the user's data matches the rules defined on the Zod Schema, everything that doesn't math it would not get into the database.
+
+## Activity 5: Securing the App with Supabase Auth
+
+### Prompt 1
+
+**What I asked:**
+Implement a complete email/password authentication flow for this Next.js 15
+App Router project using @supabase/ssr. Here is what I need:
+
+1. SUPABASE CLIENTS: Create server-side Supabase client utilities in
+   src/lib/supabase/ that work correctly with Next.js cookies. I need
+   separate clients for Server Components, Server Actions, and Middleware.
+
+2. LOGIN PAGE: Create a page at src/app/(auth)/login/page.tsx with a
+   shadcn/ui card-based login form. It should support both "Sign In"
+   and "Sign Up" (toggle between them or use tabs). Handle the auth
+   via Server Actions, not client-side fetch.
+
+3. MIDDLEWARE: Create a middleware.ts file at src/middleware.ts (next to
+   the app directory — Next.js looks for middleware as a sibling of app)
+   that:
+   - Refreshes the user's auth session on every request
+   - Protects the /projects routes — redirect unauthenticated users to /login
+   - Allows unauthenticated access to /login
+   - Uses supabase.auth.getUser() (NOT getSession()) for verification
+
+4. SIGN OUT: Add a "Sign Out" button to the existing sidebar component
+   (src/components/app-sidebar.tsx) that calls a Server Action to sign
+   the user out and redirect to /login. The button must only render
+   when an authenticated user is present — pass the user as a prop from
+   the root layout (which will need to fetch it via the server Supabase
+   client) and gate the Sign Out UI on that prop.
+
+5. UPDATE DATA QUERIES: Modify the projects page and the create-project
+   Server Action to use the authenticated Supabase client so that RLS
+   policies filter data per user.
+
+Use @workspace to understand the existing project structure. Do not remove
+or break existing functionality — integrate auth around it.
+
+**What happened:**
+
+The agent handle almost perfectly middleware, login page, sign pit and data scoping all in one pass. The agent created 5 files and modify 4.
+
+### Prompt 2
+
+**What I asked:**
+
+Fix middleware.ts, it should use getUser(): const {
+data: { user },
+} = await supabase.auth.getUser();
+
+**What happened:**
+The agent modified middleware.ts file to match the requirements.
+
+### Reflection
+
+The agent did create middleware.ts but I had to add a second prompt in order for it to use getUser(). I am not sure what does manually add files means but I just typed the name of the files after pressing the add context button and the agent read the files. I don't think I am surprised by the amount of file that changed during authentication. Middleware-based auth sets an extra barrier to the whole app that protects all files/pages. I think it is safer and more efficient than checking the login status inside each page.
