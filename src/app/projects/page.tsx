@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import {
   Card,
   CardContent,
@@ -21,6 +21,7 @@ const statusStyles: Record<Project["status"], string> = {
 };
 
 export default async function ProjectsPage() {
+  const supabase = await createClient();
   const { data: projects, error } = await supabase
     .from("projects")
     .select("*")

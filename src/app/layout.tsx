@@ -8,10 +8,11 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { Separator } from "@/components/ui/separator";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const inter = Inter({
   variable: "--font-inter",
@@ -23,11 +24,16 @@ export const metadata: Metadata = {
   description: "Developer profile for Sebastian Aedo, IT Web and Software Developer student at MATC",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body className={`${inter.variable} font-sans antialiased`}>
@@ -38,24 +44,30 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-4">
-                <SidebarTrigger className="-ml-1" />
-                <Separator orientation="vertical" className="mr-2 h-4" />
-                <NavBreadcrumb />
-                <div className="ml-auto">
-                  <ModeToggle />
-                </div>
-              </header>
-              <div className="flex flex-1 flex-col gap-6 p-6">
+            {user ? (
+              <SidebarProvider>
+                <AppSidebar user={user} />
+                <SidebarInset>
+                  <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-4">
+                    <SidebarTrigger className="-ml-1" />
+                    <Separator orientation="vertical" className="mr-2 h-4" />
+                    <NavBreadcrumb />
+                    <div className="ml-auto">
+                      <ModeToggle />
+                    </div>
+                  </header>
+                  <div className="flex flex-1 flex-col gap-6 p-6">
+                    {children}
+                  </div>
+                </SidebarInset>
+              </SidebarProvider>
+            ) : (
+              <div className="flex min-h-svh items-center justify-center bg-background p-4">
                 {children}
               </div>
-            </SidebarInset>
-          </SidebarProvider>
+            )}
           </TooltipProvider>
-        <Toaster />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
