@@ -2,6 +2,10 @@
 
 AI-native full-stack development with Next.js, Tailwind CSS, and Supabase.
 
+## Live Site
+
+Deployed at:https://part-2-ai-saedov-git-activity-6-sebastian-aedo-s-projects.vercel.app/
+
 ## Prerequisites
 
 - **Node.js** 20 or later — [Download](https://nodejs.org/)
