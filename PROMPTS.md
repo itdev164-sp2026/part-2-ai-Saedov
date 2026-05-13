@@ -258,3 +258,136 @@ The agent modified middleware.ts file to match the requirements.
 ### Reflection
 
 The agent did create middleware.ts but I had to add a second prompt in order for it to use getUser(). I am not sure what does manually add files means but I just typed the name of the files after pressing the add context button and the agent read the files. I don't think I am surprised by the amount of file that changed during authentication. Middleware-based auth sets an extra barrier to the whole app that protects all files/pages. I think it is safer and more efficient than checking the login status inside each page.
+
+## Activity 6: Deployment, Webhooks, & AI-Testing
+
+### Prompt 1
+
+**What I asked:**
+
+I have a Next.js app with Supabase Auth. Using @workspace context to
+understand the app structure, write an End-to-End (E2E) test file at
+tests/auth.spec.ts using Playwright.
+
+The tests should verify:
+
+1. LOGIN PAGE VISIBLE: Navigate to /login and confirm the login form
+   is visible (check for email input, password input, and submit button).
+
+2. REDIRECT AFTER LOGIN: After a successful login with valid credentials,
+   the user is redirected to the dashboard or projects page.
+
+3. SIDEBAR NAVIGATION: After login, verify that the sidebar navigation
+   links are visible: "Overview", "Projects", and "Settings".
+
+Requirements:
+
+- Use role-based locators (getByRole, getByLabel, getByText) instead of
+  CSS selectors or test IDs. This makes tests more accessible and resilient
+  to UI changes.
+- Add clear test descriptions that explain what each test verifies.
+- Handle the async nature of navigation and page loads with proper
+  Playwright waiting strategies.
+- Read test credentials from process.env.TEST_USER_EMAIL and
+  process.env.TEST_USER_PASSWORD. Do not hardcode credentials. If those
+  variables are not set, the credentialed tests should skip with a clear
+  message rather than fail.
+
+**What happened:**
+
+The agent worked perfectly, it used role-base locators. But the test didn't pass on the first run. It actually passed on the third try.
+
+### Prompt 2
+
+**What I asked:**
+
+This Playwright test is failing with the following error:
+\auth.spec.ts:47:7 › Authenticated flows › shows Overview, Projects, and Settings sidebar links after login (6.5s)
+
+1.  tests\auth.spec.ts:47:7 › Authenticated flows › shows Overview, Projects, and Settings sidebar links after login
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('navigation').getByRole('link', { name: 'Projects' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    - Expect "toBeVisible" with timeout 5000ms
+    - waiting for getByRole('navigation').getByRole('link', { name: 'Projects' })
+
+    60 | const sidebar = page.getByRole("navigation");
+    61 | await expect(sidebar.getByRole("link", { name: "Overview" })).toBeVisible();
+
+    > 62 | await expect(sidebar.getByRole("link", { name: "Projects" })).toBeVisible();
+
+         |                                                                   ^
+
+    63 | await expect(sidebar.getByRole("link", { name: "Settings" })).toBeVisible();
+    64 | });
+    65 | });
+    at C:\Users\bysae\Desktop\Fourth-semester\ITDEV-164\part-2-ai-Saedov\tests\auth.spec.ts:62:67
+
+    Error Context: test-results\auth-Authenticated-flows-s-fb7c4-s-sidebar-links-after-login\error-context.md
+
+1 failed
+tests\auth.spec.ts:47:7 › Authenticated flows › shows Overview, Projects, and Settings sidebar links after login
+Look at the actual component code in @workspace and fix the test
+to match the real UI. Use role-based locators.
+
+**What happened:**
+The agent "fixed" the error, but then I ran the test again and it didn't pass it.
+
+### Prompt 3
+
+**What I asked:**
+
+This Playwright test is failing with the following error:
+✘ 3 …\auth.spec.ts:47:7 › Authenticated flows › shows Overview, Projects, and Settings sidebar links after login (6.5s)
+
+1.  tests\auth.spec.ts:47:7 › Authenticated flows › shows Overview, Projects, and Settings sidebar links after login
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('complementary').getByRole('link', { name: 'Overview' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    - Expect "toBeVisible" with timeout 5000ms
+    - waiting for getByRole('complementary').getByRole('link', { name: 'Overview' })
+
+    62 | // any breadcrumb <nav> that might also contain an "Overview" link.
+    63 | const sidebar = page.getByRole("complementary");
+
+    > 64 | await expect(sidebar.getByRole("link", { name: "Overview" })).toBeVisible();
+
+         |                                                                   ^
+
+    65 | await expect(sidebar.getByRole("link", { name: "Projects" })).toBeVisible();
+    66 | await expect(sidebar.getByRole("link", { name: "Settings" })).toBeVisible();
+    67 | });
+    at C:\Users\bysae\Desktop\Fourth-semester\ITDEV-164\part-2-ai-Saedov\tests\auth.spec.ts:64:67
+
+    Error Context: test-results\auth-Authenticated-flows-s-fb7c4-s-sidebar-links-after-login\error-context.md
+
+1 failed
+tests\auth.spec.ts:47:7 › Authenticated flows › shows Overview, Projects, and Settings sidebar links after login
+
+Look at the actual component code in @workspace and fix the test
+to match the real UI. Use role-based locators.
+
+**What happened:**
+
+This time the agent actually fixed the error and all test passed.
+
+### Reflection
+
+Having an AI write and run test actually makes me feel way more comfortable, and the fact that it can also fix any errors the test detects makes it even better. Is definitely more efficient and faster than manually testing everything and I feel like I would've miss a lot of what the agent cough, or at least it would've take me a long time to do it as the agent did it.
+
+### Course Reflection
+
+I think I followed the same prompt strategy through the class, the main prompt was always perfect because it was given to us but the follow up/error fixing prompts I made, where pretty consistent and straight to the point.
+I think the most important thing I learned about working with AI coding tools is that is really efficient and fast, but if you don't control it or manage it right, it can really mess up your whole project so the usage of it has to be really supervised.
